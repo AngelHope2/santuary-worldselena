@@ -590,7 +590,7 @@
       <button class="tab menu-tab" data-menu="genre">Жанры ▼</button>
       <button class="tab menu-tab" data-menu="author">Авторы ▼</button>
       <button class="tab menu-tab" data-menu="series">Серии ▼</button>
-      <button class="tab menu-tab" data-menu="standalone">Однотомники ▼</button>
+      <button class="tab menu-tab" data-menu="standalone">Вне серии ▼</button>
       <button class="tab menu-tab" data-menu="tag">Подборки ▼</button>
     </nav>
 
@@ -2057,7 +2057,7 @@ const FIXED_CATEGORIES = [
 
       if (type === "standalone") {
         tempValue = currentStandalone;
-        sheetTitle.textContent = "Однотомники";
+        sheetTitle.textContent = "Вне серии";
         sheetMainTitle.textContent = "Выберите раздел";
       }
 
@@ -2140,7 +2140,7 @@ const FIXED_CATEGORIES = [
       if (currentGenre) parts.push(`<span class="active-filter">Жанр: ${escapeHTML(currentGenre)}</span>`);
       if (currentAuthor) parts.push(`<span class="active-filter">Автор: ${escapeHTML(currentAuthor)}</span>`);
       if (currentSeries) parts.push(`<span class="active-filter">Серия: ${escapeHTML(currentSeries)}</span>`);
-      if (currentStandalone) parts.push(`<span class="active-filter">Однотомники: ${escapeHTML(currentStandalone)}</span>`);
+      if (currentStandalone) parts.push(`<span class="active-filter">Вне серии: ${escapeHTML(currentStandalone)}</span>`);
       if (currentTag) parts.push(`<span class="active-filter">Подборка: ${escapeHTML(currentTag)}</span>`);
 
       if (!parts.length) {
