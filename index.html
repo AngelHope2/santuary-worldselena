@@ -8,8 +8,13 @@
   <!-- Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+  
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: Arial, sans-serif;
@@ -18,13 +23,16 @@
       padding: 18px;
     }
 
-    .app { max-width: 900px; margin: 0 auto; }
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
     header {
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .logo {
@@ -34,13 +42,25 @@
       object-fit: cover;
       border: 2px solid #9fb0ff;
       box-shadow: 0 0 18px rgba(159,176,255,.6);
-      background:#111;
+      background: #111;
+      flex: 0 0 auto;
     }
 
-    .site-title h1 { font-size: 30px; line-height: 1; }
-    .site-title p { color: #aaaec4; margin-top: 6px; font-size: 14px; }
+    .site-title h1 {
+      font-size: 30px;
+      line-height: 1;
+    }
 
-    .search-row { display: flex; margin-bottom: 20px; }
+    .site-title p {
+      color: #aaaec4;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .search-row {
+      display: flex;
+      margin-bottom: 16px;
+    }
 
     .search-row input {
       flex: 1;
@@ -53,35 +73,78 @@
       font-size: 16px;
     }
 
+    /* Верхнее меню: гибкое, без прокрутки, компактное */
     .tabs {
       display: flex;
-      gap: 18px;
-      margin-bottom: 10px;
-      overflow-x: auto;
-      padding-bottom: 2px;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 14px;
+      overflow: visible;
+      white-space: normal;
+      margin-bottom: 6px;
+      padding-bottom: 0;
     }
 
     .tab {
+      flex: 0 0 auto;
       background: none;
       border: none;
       color: #85899e;
-      font-size: 21px;
-      font-weight: bold;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.2;
       cursor: pointer;
-      padding-bottom: 8px;
+      padding: 4px 0 6px;
       white-space: nowrap;
     }
 
     .tab.active {
       color: white;
-      border-bottom: 4px solid white;
+      border-bottom: 3px solid white;
+    }
+
+    .filter-line {
+      min-height: 0;
+      margin-bottom: 10px;
+      color: #aaaec4;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-line:empty {
+      display: none;
+      margin: 0;
+    }
+
+    .active-filter {
+      background: linear-gradient(135deg, #4051a8, #2b8f77);
+      color: white;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .reset-filter {
+      background: #2a2d42;
+      color: #ffadc9;
+      border: 1px solid #4b506f;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
     }
 
     .history {
       background: #202131;
       border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 22px;
+      padding: 16px;
+      margin-top: 12px;
+      margin-bottom: 18px;
     }
 
     .history-header {
@@ -91,27 +154,42 @@
       margin-bottom: 10px;
     }
 
-    .history h2, .results-title { font-size: 30px; }
+    .history h2,
+    .results-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e6e8f5;
+      letter-spacing: 0.2px;
+    }
 
     .history button {
       background: none;
       border: none;
       color: #ffadc9;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 13px;
       cursor: pointer;
     }
 
-    .history p, .counter { color: #b7b9ca; font-size: 16px; }
+    .history p,
+    .counter {
+      color: #8f93a8;
+      font-size: 13px;
+    }
 
-    .results-title { margin-bottom: 8px; }
-    .counter { margin-bottom: 18px; color:#aaaec4; }
+    .results-title {
+      margin-bottom: 8px;
+    }
+
+    .counter {
+      margin-bottom: 18px;
+    }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 16px;
-      align-items: start;
+      align-items: stretch;
     }
 
     .card {
@@ -120,6 +198,9 @@
       border-radius: 18px;
       overflow: hidden;
       box-shadow: 0 8px 18px rgba(0,0,0,.25);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     .cover-wrap {
@@ -149,11 +230,42 @@
       z-index: 2;
     }
 
+    .card-content {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .book-title {
+      font-size: 13px;
+      line-height: 1.2;
+      min-height: 44px;
+      max-height: 44px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    /* Теги гибкие: если тегов нет — место исчезает */
     .tags {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 10px;
+      min-height: 0;
+      height: auto;
+      max-height: 54px;
+      overflow: hidden;
+      margin: 0 0 10px 0;
+      align-content: flex-start;
+    }
+
+    .tags:empty {
+      display: none;
+      min-height: 0;
+      height: 0;
+      max-height: 0;
+      margin: 0;
+      padding: 0;
     }
 
     .tag {
@@ -170,7 +282,9 @@
       white-space: nowrap;
     }
 
-    .tag:hover { background: #626672; }
+    .tag:hover {
+      background: #626672;
+    }
 
     .tag.active-tag {
       background: linear-gradient(135deg, #5869d8, #2baf8c);
@@ -178,50 +292,11 @@
       box-shadow: 0 0 10px rgba(88,105,216,.55);
     }
 
-    .filter-line {
-      min-height: 34px;
-      margin-bottom: 16px;
-      color: #aaaec4;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .active-filter {
-      background: linear-gradient(135deg, #4051a8, #2b8f77);
-      color: white;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-weight: bold;
-      font-size: 13px;
-    }
-
-    .reset-filter {
-      background: #2a2d42;
-      color: #ffadc9;
-      border: 1px solid #4b506f;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .card-content { padding: 15px; }
-
-    .book-title {
-      font-size: 14px;
-      line-height: 1.2;
-      margin-bottom: 10px;
-      min-height: 34px;
-    }
-
     .links {
       display: grid;
       grid-template-columns: 1fr;
       gap: 7px;
+      margin-top: auto;
     }
 
     .links a {
@@ -236,7 +311,9 @@
       background: #242846;
     }
 
-    .links a:hover { background: #32385f; }
+    .links a:hover {
+      background: #32385f;
+    }
 
     .empty {
       color: #aaaec4;
@@ -246,19 +323,7 @@
       display: none;
     }
 
-
-    .more-category {
-      margin-left: auto;
-      background: #2a2d42;
-      border: 1px solid #4b506f;
-      color: #fff;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-weight: bold;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
+    /* Окно фильтров */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -268,51 +333,63 @@
       align-items: flex-end;
     }
 
-    .modal-backdrop.open { display: flex; }
+    .modal-backdrop.open {
+      display: flex;
+    }
 
     .category-sheet {
       width: 100%;
       max-width: 900px;
+      max-height: 88vh;
+      overflow-y: auto;
       margin: 0 auto;
       background: rgba(42, 43, 55, .97);
       border-radius: 26px 26px 0 0;
-      padding: 24px 18px 22px;
+      padding: 18px 14px 16px;
       box-shadow: 0 -10px 35px rgba(0,0,0,.45);
       animation: sheetUp .22s ease-out;
     }
 
     @keyframes sheetUp {
-      from { transform: translateY(100%); opacity: .5; }
-      to { transform: translateY(0); opacity: 1; }
+      from {
+        transform: translateY(100%);
+        opacity: .5;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .sheet-title {
-      font-size: 30px;
-      margin-bottom: 18px;
+      font-size: 22px;
+      margin-bottom: 12px;
     }
 
     .sheet-section-title {
-      color: #c7c9d8;
-      font-size: 15px;
-      margin: 14px 0 8px;
+      color: #b9bdcf;
+      font-size: 13px;
+      margin: 12px 0 8px;
       font-weight: bold;
     }
 
     .sheet-options {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 7px;
     }
 
     .sheet-chip {
       border: none;
-      border-radius: 12px;
+      border-radius: 999px;
       background: #777b82;
       color: #fff;
-      padding: 11px 16px;
-      font-size: 15px;
+      padding: 8px 11px;
+      font-size: 12px;
+      line-height: 1.1;
       font-weight: bold;
       cursor: pointer;
+      max-width: 100%;
     }
 
     .sheet-chip.selected {
@@ -321,396 +398,133 @@
     }
 
     .sheet-actions {
+      position: sticky;
+      bottom: -16px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
-      margin-top: 22px;
+      margin-top: 16px;
+      padding-top: 14px;
+      background: linear-gradient(to top, rgba(42,43,55,1), rgba(42,43,55,.95));
     }
 
     .sheet-actions button {
       border: none;
-      border-radius: 16px;
-      padding: 14px 10px;
-      font-size: 17px;
+      border-radius: 14px;
+      padding: 12px 10px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       color: white;
     }
 
-    .sheet-reset { background: #8b8e93; }
+    .sheet-reset {
+      background: #8b8e93;
+    }
+
     .sheet-confirm {
       background: linear-gradient(135deg, #ff3c96, #ff1c7b);
       box-shadow: 0 0 16px rgba(255, 60, 150, .55);
     }
 
     @media (max-width: 560px) {
-      body { padding: 12px; }
-      .site-title h1 { font-size: 25px; }
+      body {
+        padding: 12px;
+      }
+
+      header {
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+
+      .site-title h1 {
+        font-size: 25px;
+      }
+
+      .search-row {
+        margin-bottom: 14px;
+      }
+
+      .tabs {
+        gap: 5px 11px;
+        margin-bottom: 4px;
+        padding-bottom: 0;
+      }
+
+      .tab {
+        font-size: 12px;
+        padding: 3px 0 5px;
+      }
+
+      .history {
+        margin-top: 10px;
+        margin-bottom: 16px;
+      }
+
       .grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 12px;
       }
-      .book-title { font-size: 13px; min-height: 32px; }
-      .links { grid-template-columns: 1fr; gap: 6px; }
-      .links a { font-size: 12px; padding: 7px 5px; }
-      .tag { font-size: 11px; padding: 5px 7px; }
-      .status-badge { font-size: 10px; padding: 5px 7px; }
-    }
-  
-    /* === Улучшения: компактные категории и ровные карточки === */
-    .tabs {
-      align-items: center !important;
-      gap: 10px !important;
-      margin-bottom: 14px !important;
-      overflow: hidden !important;
-      white-space: nowrap !important;
-      padding-bottom: 3px !important;
-    }
 
-    #topCategoryButtons {
-      display: flex;
-      gap: 10px;
-      overflow: hidden;
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-
-    .tab {
-      font-size: 14px !important;
-      padding: 6px 0 7px !important;
-      flex: 0 0 auto;
-    }
-
-    .tab.active {
-      border-bottom: 3px solid white !important;
-    }
-
-    .more-category {
-      margin-left: auto !important;
-      padding: 6px 10px !important;
-      font-size: 13px !important;
-      flex: 0 0 auto;
-    }
-
-    .grid {
-      align-items: stretch !important;
-    }
-
-    .card {
-      display: flex !important;
-      flex-direction: column !important;
-      height: 100% !important;
-    }
-
-    .card-content {
-      padding: 12px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      flex: 1 !important;
-    }
-
-    .book-title {
-      font-size: 13px !important;
-      line-height: 1.2 !important;
-      min-height: 46px !important;
-      max-height: 46px !important;
-      overflow: hidden !important;
-      margin-bottom: 9px !important;
-    }
-
-    .tags {
-      min-height: 56px !important;
-      max-height: 56px !important;
-      overflow: hidden !important;
-      align-content: flex-start !important;
-    }
-
-    .links {
-      margin-top: auto !important;
-    }
-
-    @media (max-width: 560px) {
-      .tab { font-size: 13px !important; }
-      #topCategoryButtons { gap: 8px; }
       .book-title {
-        font-size: 12px !important;
-        min-height: 44px !important;
-        max-height: 44px !important;
+        font-size: 12px;
+        min-height: 42px;
+        max-height: 42px;
       }
+
       .tags {
-        min-height: 52px !important;
-        max-height: 52px !important;
+        max-height: 50px;
+        margin-bottom: 8px;
       }
-    }
 
-  
-    /* === Более аккуратные заголовки === */
-    .history h2,
-    .results-title {
-      font-size: 20px !important;
-      font-weight: 600 !important;
-      color: #e6e8f5 !important;
-      letter-spacing: 0.2px;
-    }
+      .tag {
+        font-size: 11px;
+        padding: 5px 7px;
+      }
 
-    .counter {
-      font-size: 13px !important;
-      color: #8f93a8 !important;
-    }
+      .links {
+        gap: 6px;
+      }
 
-    .history p {
-      font-size: 13px !important;
-      color: #8f93a8 !important;
-    }
+      .links a {
+        font-size: 12px;
+        padding: 7px 5px;
+      }
 
-    .history {
-      padding: 16px !important;
-      margin-bottom: 18px !important;
-    }
+      .status-badge {
+        font-size: 10px;
+        padding: 5px 7px;
+      }
 
-    .history button {
-      font-size: 13px !important;
-    }
-
-  
-    /* === Улучшение окна «Ещё» для телефона === */
-    .modal-backdrop {
-      align-items: flex-end !important;
-    }
-
-    .category-sheet {
-      max-height: 88vh !important;
-      overflow-y: auto !important;
-      padding: 18px 14px 16px !important;
-    }
-
-    .sheet-title {
-      font-size: 22px !important;
-      margin-bottom: 12px !important;
-    }
-
-    .sheet-section-title {
-      font-size: 13px !important;
-      margin: 12px 0 8px !important;
-      color: #b9bdcf !important;
-    }
-
-    .sheet-options {
-      gap: 7px !important;
-    }
-
-    .sheet-chip {
-      border-radius: 999px !important;
-      padding: 8px 11px !important;
-      font-size: 12px !important;
-      line-height: 1.1 !important;
-      max-width: 100%;
-    }
-
-    .sheet-actions {
-      position: sticky;
-      bottom: -16px;
-      background: linear-gradient(to top, rgba(42,43,55,1), rgba(42,43,55,.95));
-      padding-top: 14px;
-      margin-top: 16px !important;
-    }
-
-    .sheet-actions button {
-      border-radius: 14px !important;
-      padding: 12px 10px !important;
-      font-size: 15px !important;
-    }
-
-    @media (max-width: 560px) {
       .category-sheet {
-        max-height: 82vh !important;
-        border-radius: 22px 22px 0 0 !important;
+        max-height: 82vh;
+        border-radius: 22px 22px 0 0;
       }
 
       .sheet-chip {
-        font-size: 11px !important;
-        padding: 7px 10px !important;
+        font-size: 11px;
+        padding: 7px 10px;
       }
 
       .sheet-options {
-        gap: 6px !important;
+        gap: 6px;
       }
 
       .sheet-title {
-        font-size: 20px !important;
+        font-size: 20px;
       }
 
       .sheet-actions {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
+        gap: 10px;
       }
     }
-
-  
-    /* === Верхнее меню: Главная / Жанры / Авторы / Серии / Подборки === */
-    .tabs {
-      align-items: center !important;
-      gap: 14px !important;
-      margin-bottom: 14px !important;
-      overflow: hidden !important;
-      white-space: nowrap !important;
-      padding-bottom: 3px !important;
-    }
-    .tab {
-      font-size: 14px !important;
-      padding: 6px 0 7px !important;
-      flex: 0 0 auto;
-    }
-    .tab.active {
-      border-bottom: 3px solid white !important;
-    }
-    @media (max-width: 560px) {
-      .tabs { gap: 10px !important; }
-      .tab { font-size: 12px !important; }
-    }
-
-/* ===== Верхнее меню ===== */
-
-.tabs {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 10px 18px !important;
-
-  overflow: visible !important;
-  white-space: normal !important;
-
-  margin-bottom: 24px !important;
-  padding-bottom: 4px !important;
-}
-
-.tab {
-  flex: 0 0 auto !important;
-
-  font-size: 14px !important;
-  font-weight: 600 !important;
-
-  padding: 6px 0 8px !important;
-
-  line-height: 1.2 !important;
-}
-
-/* мобильная версия */
-
-@media (max-width: 768px) {
-
-  .tabs {
-    gap: 10px 16px !important;
-    margin-top: 8px !important;
-  }
-
-  .tab {
-    font-size: 13px !important;
-    padding: 4px 0 7px !important;
-  }
-
-}
-  
-/* ===== FINAL FIX: мобильное меню + гибкие теги без лишней пустоты ===== */
-
-/* Верхнее меню: переносится на 2 строки, без горизонтальной прокрутки */
-.tabs {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 10px 16px !important;
-  overflow: visible !important;
-  white-space: normal !important;
-  margin-bottom: 22px !important;
-  padding-bottom: 4px !important;
-}
-
-.tab {
-  flex: 0 0 auto !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  line-height: 1.2 !important;
-  padding: 5px 0 7px !important;
-}
-
-/* Карточки остаются ровными */
-.grid {
-  align-items: stretch !important;
-}
-
-.card {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-}
-
-.card-content {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 !important;
-}
-
-/* Название оставляем ровным, чтобы карточки не прыгали */
-.book-title {
-  min-height: 44px !important;
-  max-height: 44px !important;
-  overflow: hidden !important;
-  margin-bottom: 8px !important;
-}
-
-/* Теги теперь гибкие:
-   - если тегов нет, пустое место исчезает
-   - если теги есть, карточки остаются аккуратными */
-.tags {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 6px !important;
-
-  min-height: 0 !important;
-  height: auto !important;
-  max-height: 54px !important;
-
-  overflow: hidden !important;
-  margin: 0 0 10px 0 !important;
-  align-content: flex-start !important;
-}
-
-/* Если тегов нет — блок полностью исчезает */
-.tags:empty {
-  display: none !important;
-  min-height: 0 !important;
-  height: 0 !important;
-  max-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Кнопки всегда прижаты вниз карточки */
-.links {
-  margin-top: auto !important;
-}
-
-@media (max-width: 560px) {
-  .tabs {
-    gap: 9px 13px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .tab {
-    font-size: 12px !important;
-    padding: 4px 0 6px !important;
-  }
-
-  .book-title {
-    min-height: 42px !important;
-    max-height: 42px !important;
-  }
-
-  .tags {
-    max-height: 50px !important;
-    margin-bottom: 8px !important;
-  }
-}
-
   </style>
+
 </head>
 <body>
   <div class="app">
