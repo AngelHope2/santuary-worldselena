@@ -523,6 +523,144 @@
         gap: 10px;
       }
     }
+  
+    /* Окно аннотации */
+    .annotation-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .68);
+      z-index: 60;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .annotation-backdrop.open {
+      display: flex;
+    }
+
+    .annotation-modal {
+      width: min(620px, 100%);
+      max-height: 82vh;
+      overflow-y: auto;
+      background: rgba(32, 33, 49, .98);
+      border: 1px solid #3c4162;
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.55);
+      padding: 18px;
+    }
+
+    .annotation-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .annotation-title {
+      font-size: 20px;
+      line-height: 1.25;
+      color: #ffffff;
+    }
+
+    .annotation-close {
+      border: none;
+      background: #34384f;
+      color: #fff;
+      border-radius: 999px;
+      width: 34px;
+      height: 34px;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .annotation-text {
+      color: #d9dbea;
+      font-size: 15px;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    .annotation-text b,
+    .annotation-text strong {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .annotation-text i,
+    .annotation-text em {
+      font-style: italic;
+    }
+
+    .annotation-text u {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .annotation-actions {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .annotation-read {
+      text-decoration: none;
+      text-align: center;
+      color: white;
+      border: 1px solid #58618d;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      background: #242846;
+    }
+
+    .annotation-read:hover {
+      background: #32385f;
+    }
+
+    .annotation-btn {
+      border: 1px solid #58618d;
+      border-radius: 10px;
+      padding: 8px 6px;
+      font-size: 13px;
+      font-weight: bold;
+      background: #242846;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .annotation-btn:hover {
+      background: #32385f;
+    }
+
+    @media (max-width: 560px) {
+      .annotation-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .annotation-modal {
+        max-height: 86vh;
+        border-radius: 22px 22px 0 0;
+        padding: 16px;
+      }
+
+      .annotation-title {
+        font-size: 18px;
+      }
+
+      .annotation-text {
+        font-size: 14px;
+      }
+    }
+
   </style>
 
 </head>
@@ -582,6 +720,19 @@
     </div>
   </div>
 
+  <div class="annotation-backdrop" id="annotationBackdrop">
+    <div class="annotation-modal">
+      <div class="annotation-header">
+        <h2 class="annotation-title" id="annotationTitle">Аннотация</h2>
+        <button class="annotation-close" id="annotationClose" type="button">×</button>
+      </div>
+      <div class="annotation-text" id="annotationText"></div>
+      <div class="annotation-actions">
+        <a class="annotation-read" id="annotationRead" href="#" target="_blank">Читать</a>
+      </div>
+    </div>
+  </div>
+
   <script>
     if (window.Telegram && window.Telegram.WebApp) {
       Telegram.WebApp.ready();
@@ -606,6 +757,7 @@
     "Курортный роман",
     "Френдзона"
   ],
+  description: "Лучший день в его жизни обернётся для неё сущим кошмаром.\n\nЕщё с колледжа Марко Доусон видел в Белле только друга. В день своей свадьбы он вспоминал о ней лишь из праздного любопытства. Марко не мог понять, почему подружка невесты не явилась на венчание. В конце концов, его молодая жена и Изабелла были соседками по комнате.\n\nПрошло семь лет, и Белла узнает, что Марко недавно развелся и планирует с семьей отдохнуть на элитном курорте Канкуна. Изабелла не желает второй раз упускать свое счастье из рук, поэтому отправляется на курорт, планируя «случайно» столкнуться с Марко и разжечь в его душе искру любви.\n\nПроблема в том, что Белла не учла одного: Финна Доусона - красивого, обаятельного, брата-близнеца Марко, который хочет помирить бывших супругов и ради этого собирается поломать все планы очаровательной мисс Линд.\n\n<b>Примечание:</b> Вдохновением для написания этой романтической истории стали два фильма: «Сабрина» и «Пока ты спал».",
   annotation: "https://t.me/kalosis/204/314",
   read: "https://t.me/kalosis/204/315"
 },
@@ -624,6 +776,7 @@
 	"Суженные",
     "Ведьмы"
   ],
+  description: "<b><i>Любовь, что сильнее времени и не подвластна проклятию.</i></b>\n\nНам с Киараном было всего по двенадцать, когда я вытащила его из ледяных вод ручья за своим домом. Когда он повернул голову в мою сторону — с этими невидящими, лавандовыми глазами — я сразу поняла: наш возраст, пожалуй, единственное, что нас связывает.\n\nОн говорил с акцентом, у него были заострённые уши, а ещё — он был так красив, что у меня защемило сердце.\n\nОн утверждал, что является принцем фейри, проклятым ведьмами, которые лишили его зрения.\n\nТогда я подумала, что он сошёл с ума от холода. Но оказалось — вовсе нет. И по какой-то странной причине он продолжал возвращаться.\n\nПроблема лишь в том, что один день в моём мире равен целому году в его. Каждый раз, когда я вижу Киарана, он становится старше. Мудрее. И… ещё прекраснее.\n\nПоследние шесть лет я изо всех сил стараюсь не влюбляться в него, ведь условия проклятия просты: если он не дождётся своей истинной пары всеми возможными способами — включая поцелуй, будь он невинным… или не совсем, — он останется слеп навеки.\n\nПоэтому, когда Киаран целует меня и уносит сквозь портал в своё царство, я ставлю перед собой цель — хоть как-то всё исправить.\n\nБыло бы куда проще, если бы он не был так решительно настроен жениться на мне… и если бы кто-то не пытался убить меня на каждом шагу.\n\n<b><i>Между Рассветом и Закатом рождается история, которую невозможно забыть.</i></b>",
   annotation: "https://t.me/kalosis/240/291",
   read: "https://t.me/kalosis/240/293"
 },
@@ -1900,6 +2053,12 @@ const FIXED_CATEGORIES = [
     const sheetResetBtn = document.getElementById("sheetReset");
     const sheetConfirmBtn = document.getElementById("sheetConfirm");
 
+    const annotationBackdrop = document.getElementById("annotationBackdrop");
+    const annotationTitle = document.getElementById("annotationTitle");
+    const annotationText = document.getElementById("annotationText");
+    const annotationRead = document.getElementById("annotationRead");
+    const annotationClose = document.getElementById("annotationClose");
+
     function normalizeText(value) {
       return String(value || "").trim().toLowerCase().replaceAll("ё", "е");
     }
@@ -1911,6 +2070,23 @@ const FIXED_CATEGORIES = [
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function formatDescription(value) {
+      let text = escapeHTML(value || "Аннотация пока не добавлена.");
+
+      const allowedTags = ["b", "strong", "i", "em", "u"];
+      allowedTags.forEach(tag => {
+        text = text.replaceAll(`&lt;${tag}&gt;`, `<${tag}>`);
+        text = text.replaceAll(`&lt;/${tag}&gt;`, `</${tag}>`);
+      });
+
+      text = text
+        .replaceAll("&lt;br&gt;", "<br>")
+        .replaceAll("&lt;br/&gt;", "<br>")
+        .replaceAll("&lt;br /&gt;", "<br>");
+
+      return text;
     }
 
     function getAuthor(book) {
@@ -2032,6 +2208,17 @@ const FIXED_CATEGORIES = [
 
     function closeFilterSheet() {
       filterBackdrop.classList.remove("open");
+    }
+
+    function openAnnotation(book) {
+      annotationTitle.textContent = book.title || "Аннотация";
+      annotationText.innerHTML = formatDescription(book.description);
+      annotationRead.href = book.read || "#";
+      annotationBackdrop.classList.add("open");
+    }
+
+    function closeAnnotation() {
+      annotationBackdrop.classList.remove("open");
     }
 
     function getOptionsByMenuType(type) {
@@ -2235,7 +2422,7 @@ const FIXED_CATEGORIES = [
             <h3 class="book-title">${escapeHTML(book.title)}</h3>
             <div class="tags">${tagsHTML}</div>
             <div class="links">
-              <a href="${escapeHTML(book.annotation)}" target="_blank">Аннотация</a>
+              <button class="annotation-btn" type="button">Аннотация</button>
               <a href="${escapeHTML(book.read)}" target="_blank">Читать</a>
             </div>
           </div>
@@ -2247,6 +2434,8 @@ const FIXED_CATEGORIES = [
             window.scrollTo({ top: 0, behavior: "smooth" });
           });
         });
+
+        card.querySelector(".annotation-btn").addEventListener("click", () => openAnnotation(book));
 
         card.querySelector(".links a:last-child").addEventListener("click", () => saveToHistory(book.title));
 
@@ -2270,6 +2459,12 @@ const FIXED_CATEGORIES = [
     filterBackdrop.addEventListener("click", (event) => {
       if (event.target === filterBackdrop) closeFilterSheet();
     });
+
+    annotationBackdrop.addEventListener("click", (event) => {
+      if (event.target === annotationBackdrop) closeAnnotation();
+    });
+
+    annotationClose.addEventListener("click", closeAnnotation);
 
     sheetResetBtn.addEventListener("click", () => {
       tempValue = null;
